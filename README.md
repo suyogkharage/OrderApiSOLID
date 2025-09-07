@@ -147,3 +147,38 @@ classDiagram
     INotification <|.. EmailNotification
     INotification <|.. SmsNotification
 
+```
+
+---
+
+## 🔹 Order Placement Workflow
+
+```mermaid
+sequenceDiagram
+    participant C as Controller
+    participant S as OrderService
+    participant V as Validator
+    participant PF as PaymentProcessorFactory
+    participant P as PaymentProcessor
+    participant RF as OrderRepositoryFactory
+    participant R as OrderRepository
+    participant N as Notification
+
+    C->>S: POST /api/orders/{paymentMethod}/{repoType}
+    S->>V: Validate Order
+    V-->>S: Validation Result
+
+    S->>PF: GetProcessor(paymentMethod)
+    PF-->>S: PaymentProcessor (CreditCard/PayPal)
+    S->>P: Process Payment
+    P-->>S: Payment Success
+
+    S->>RF: GetRepository(repoType)
+    RF-->>S: OrderRepository (SQL/Mongo)
+    S->>R: Save Order
+    R-->>S: Order Saved
+
+    S->>N: Send Notification (Email/SMS)
+    N-->>S: Notification Sent
+
+    S-->>C: "Order placed successfully"
