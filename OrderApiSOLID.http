@@ -1,0 +1,6 @@
+@OrderApiSOLID_HostAddress = http://localhost:5152
+
+GET {{OrderApiSOLID_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
